@@ -14,6 +14,7 @@ function useInView(threshold = 0.1) {
   }, []);
   return [ref, inView];
 }
+//education deatials
 
 const education = [
   {
