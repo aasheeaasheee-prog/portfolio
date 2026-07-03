@@ -1,6 +1,6 @@
 import './index.css';
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './hero';
 import About from './about';
@@ -8,6 +8,98 @@ import Skills from './skills';
 import Projects from './project';
 import Education from './education';
 import Contact from './contact';
+
+// Custom cursor glow
+function CursorGlow() {
+  const glowRef = useRef(null);
+  const ringRef = useRef(null);
+  const pos = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const move = (e) => {
+      pos.current = { x: e.clientX, y: e.clientY };
+      if (glowRef.current) {
+        glowRef.current.style.left = e.clientX + 'px';
+        glowRef.current.style.top = e.clientY + 'px';
+      }
+      if (ringRef.current) {
+        ringRef.current.style.left = e.clientX + 'px';
+        ringRef.current.style.top = e.clientY + 'px';
+      }
+    };
+    window.addEventListener('mousemove', move);
+    return () => window.removeEventListener('mousemove', move);
+  }, []);
+
+  return (
+    <>
+      <div className="cursor-glow" ref={glowRef} />
+      <div className="cursor-ring" ref={ringRef} />
+    </>
+  );
+}
+
+// Scroll Progress Indicator
+function ScrollProgress() {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const el = document.documentElement;
+      const scrollTop = window.scrollY;
+      const scrollHeight = el.scrollHeight - el.clientHeight;
+      setProgress(scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <div
+      className="scroll-progress-bar"
+      style={{ width: `${progress}%` }}
+    />
+  );
+}
+
+// Mouse follow light
+function MouseLight() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const move = (e) => {
+      if (ref.current) {
+        ref.current.style.left = e.clientX + 'px';
+        ref.current.style.top = e.clientY + 'px';
+      }
+    };
+    window.addEventListener('mousemove', move, { passive: true });
+    return () => window.removeEventListener('mousemove', move);
+  }, []);
+  return <div className="mouse-light" ref={ref} />;
+}
+
+// Page Loader
+function PageLoader({ onDone }) {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setLoaded(true);
+      setTimeout(onDone, 600);
+    }, 1800);
+    return () => clearTimeout(t);
+  }, [onDone]);
+  return (
+    <div className={`page-loader ${loaded ? 'loaded' : ''}`}>
+      <div className="loader-logo">A.</div>
+      <div className="loader-bar">
+        <div className="loader-bar-fill" />
+      </div>
+      <div style={{ fontSize: '0.75rem', color: 'rgba(240,240,255,0.3)', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+        Loading Portfolio...
+      </div>
+    </div>
+  );
+}
 
 // Floating background blobs
 function BackgroundBlobs() {
@@ -63,21 +155,36 @@ function BackgroundBlobs() {
 }
 
 export default function App() {
+  const [loaderDone, setLoaderDone] = useState(false);
+
   return (
-    <div style={{ position: 'relative', background: 'var(--bg)' }}>
-      <BackgroundBlobs />
-      <Navbar />
-      <main style={{ position: 'relative', zIndex: 1 }}>
-        <Hero />
-        <About />
-        <Skills />
-        <Projects />
-        <Education />
-        <Contact />
-      </main>
-      <footer className="footer">
-        <p>Crafted with <span>♥</span> by <span>Aashika</span> · 2025</p>
-      </footer>
-    </div>
+    <>
+      <PageLoader onDone={() => setLoaderDone(true)} />
+      <CursorGlow />
+      <ScrollProgress />
+      <MouseLight />
+      <div style={{ position: 'relative', background: 'var(--bg)', opacity: loaderDone ? 1 : 0, transition: 'opacity 0.6s ease' }}>
+        <BackgroundBlobs />
+        <Navbar />
+        <main style={{ position: 'relative', zIndex: 1 }}>
+          <Hero />
+          <About />
+          <Skills />
+          <Projects />
+          <Education />
+          <Contact />
+        </main>
+        <footer className="footer">
+          <div className="footer-content">
+            <p>Crafted with <span className="heart">❤️</span> by <span>Aashika</span> · © 2026 All Rights Reserved.</p>
+            <div className="footer-links">
+              <a href="mailto:aashika@example.com">Email</a>
+              <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </>
   );
 }

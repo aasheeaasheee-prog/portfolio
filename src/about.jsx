@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
-function useInView(threshold = 0.2) {
+function useInView(threshold = 0.15) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
 
@@ -17,8 +17,15 @@ function useInView(threshold = 0.2) {
   return [ref, inView];
 }
 
+const featureCards = [
+  { icon: '✨', label: 'Modern UI Design' },
+  { icon: '📱', label: 'Responsive Development' },
+  { icon: '🚀', label: 'Continuous Learning' },
+  { icon: '🧹', label: 'Clean & Maintainable Code' },
+];
+
 export default function About() {
-  const [ref, inView] = useInView(0.15);
+  const [ref, inView] = useInView(0.12);
 
   const container = {
     hidden: {},
@@ -42,9 +49,16 @@ export default function About() {
           {/* Image column */}
           <motion.div className="about-image-area" variants={fadeUp}>
             <div className="glass-card about-image-frame">
-              <img src="/aashika.png" alt="Aashika"
+              <img
+                src="/stfu_edited.png"
+                alt="Aashika — Frontend Developer from Madurai"
+                loading="lazy"
                 onError={(e) => {
-                  e.target.style.cssText = 'width:100%;height:420px;object-fit:cover;background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(6,182,212,0.2));display:flex;align-items:center;justify-content:center;';
+                  e.target.style.cssText = `
+                    width:100%;height:440px;object-fit:cover;
+                    background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(6,182,212,0.2));
+                    display:flex;align-items:center;justify-content:center;
+                  `;
                 }}
               />
               <div className="about-image-overlay" />
@@ -54,8 +68,8 @@ export default function About() {
             <div className="about-badge">
               <div className="about-badge-icon">💜</div>
               <div className="about-badge-text">
-                <strong>Open to work</strong>
-                <span>Frontend Roles</span>
+                <strong>Open to Opportunities</strong>
+                <span>Internships & Freelance</span>
               </div>
             </div>
           </motion.div>
@@ -64,48 +78,53 @@ export default function About() {
           <motion.div className="about-text" variants={container}>
             <motion.span className="section-tag" variants={fadeUp}>About Me</motion.span>
             <motion.h2 className="section-title" variants={fadeUp}>
-              Crafting digital experiences that <span className="grad-text">inspire</span>
+              Creating beautiful digital experiences with <span className="grad-text">passion.</span>
             </motion.h2>
+
             <motion.p className="about-description" variants={fadeUp}>
-              I'm <strong style={{ color: 'var(--purple-light)' }}>Aashika</strong>, an
-              enthusiastic IT student with a deep passion for frontend development and beautiful
-              UI design. I love turning creative ideas into pixel-perfect, performant web
-              experiences that users truly enjoy.
-            </motion.p>
-            <motion.p className="about-description" variants={fadeUp}
-              style={{ marginBottom: 0 }}>
-              I believe great design isn't just about aesthetics — it's about creating
-              intuitive, accessible products that solve real problems with elegance.
+              I'm <strong style={{ color: 'var(--purple-light)' }}>Aashika</strong>, currently pursuing
+              B.Sc. Information Technology at <strong style={{ color: 'var(--blue-light)' }}>The American College, Madurai</strong>.
             </motion.p>
 
-            <motion.div className="about-highlights" variants={fadeUp}
-              style={{ marginTop: '28px' }}>
-              {[
-                'Passionate about modern UI/UX design principles',
-                'Always learning new frameworks and tools',
-                'Love building clean, maintainable code',
-                'Dreaming of creating products that reach millions',
-              ].map((text) => (
-                <div className="highlight-item" key={text}>
-                  <div className="highlight-dot" />
-                  <span>{text}</span>
+            <motion.p className="about-description" variants={fadeUp}>
+              I completed my Higher Secondary education at <strong style={{ color: 'var(--blue-light)' }}>Nirmala Girls Higher Secondary School</strong> and
+              studied up to Class 10 at <strong style={{ color: 'var(--blue-light)' }}>Saracens Matriculation School</strong>.
+            </motion.p>
+
+            <motion.p className="about-description" variants={fadeUp} style={{ marginBottom: 0 }}>
+              I love frontend development, UI/UX design, and creating interactive web applications with clean
+              code and modern interfaces. My goal is to become a professional Full Stack Developer while building
+              impactful applications that solve real-world problems.
+            </motion.p>
+
+            {/* Feature Cards */}
+            <motion.div className="about-feature-cards" variants={fadeUp}>
+              {featureCards.map((card) => (
+                <div className="about-feature-card" key={card.label}>
+                  <span style={{ fontSize: '1.1rem' }}>{card.icon}</span>
+                  <span>{card.label}</span>
                 </div>
               ))}
             </motion.div>
 
             <motion.div
-              style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginTop: '36px' }}
+              style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginTop: '8px' }}
               variants={fadeUp}
             >
               <a
                 href="#contact"
+                id="about-connect-btn"
                 className="btn-primary"
                 onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }}
               >
                 <span>✦ Let's Connect</span>
               </a>
-              <a href="#skills" className="btn-ghost"
-                onClick={(e) => { e.preventDefault(); document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' }); }}>
+              <a
+                href="#skills"
+                id="about-skills-btn"
+                className="btn-ghost"
+                onClick={(e) => { e.preventDefault(); document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' }); }}
+              >
                 My Skills ↓
               </a>
             </motion.div>
